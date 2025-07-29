@@ -13,6 +13,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { authService } from '../services/authService'
+import { terminalLogger } from '../services/terminalLogger'
 
 // Criação do contexto de autenticação
 const AuthContext = createContext({})
@@ -48,24 +49,32 @@ export const AuthProvider = ({ children }) => {
    */
   useEffect(() => {
     const checkAuth = async () => {
+      terminalLogger.auth('Verificando autenticação existente...')
+      
       try {
         // Busca token e dados do usuário no localStorage
         const token = localStorage.getItem('token')
         const userData = localStorage.getItem('user')
         
         if (token && userData) {
+          terminalLogger.auth('Token encontrado, restaurando sessão')
           // Para desenvolvimento: usar dados do localStorage sem validar com API
           // TODO: Quando implementar backend, trocar por validação real
-          setUser(JSON.parse(userData))
+          const user = JSON.parse(userData)
+          setUser(user)
+          terminalLogger.success(`Usuário autenticado: ${user.name} (${user.role})`, user)
+        } else {
+          terminalLogger.auth('Nenhuma sessão encontrada')
         }
       } catch (error) {
-        console.error('Erro ao validar token:', error)
+        terminalLogger.error('Erro ao validar token', error)
         // Remove dados corrompidos do localStorage
         localStorage.removeItem('token')
         localStorage.removeItem('user')
       } finally {
         // Para o loading independente do resultado
         setLoading(false)
+        terminalLogger.auth('Verificação de autenticação concluída')
       }
     }
 
@@ -80,6 +89,8 @@ export const AuthProvider = ({ children }) => {
    * @throws {Error} Erro de credenciais inválidas
    */
   const login = async (email, password) => {
+    terminalLogger.auth(`Tentativa de login para: ${email}`)
+    
     try {
       // Para desenvolvimento: usar autenticação mockada
       // TODO: Trocar por chamada real da API quando backend estiver pronto
@@ -110,18 +121,34 @@ export const AuthProvider = ({ children }) => {
       if (user && password === '123456') {
         const token = 'mock_token_' + Date.now()
         
+        terminalLogger.debug('Atualizando estado do usuário...')
         // Atualiza estado global
         setUser(user)
         
+        terminalLogger.debug('Persistindo dados no localStorage...')
         // Persiste dados no localStorage
         localStorage.setItem('token', token)
         localStorage.setItem('user', JSON.stringify(user))
         
-        return { user, token }
+        terminalLogger.success(`Login realizado com sucesso: ${user.name} (${user.role})`, {
+          userId: user.id,
+          role: user.role,
+          token: token.substring(0, 20) + '...'
+        })
+        
+        const result = { user, token }
+        terminalLogger.debug('Retornando resultado do login', result)
+        return result
       } else {
+        terminalLogger.warn(`Login falhou para: ${email} - Credenciais inválidas`)
         throw new Error('Credenciais inválidas')
       }
     } catch (error) {
+      terminalLogger.error('Erro durante o login', {
+        error: error.message,
+        stack: error.stack,
+        email: email
+      })
       throw error
     }
   }
@@ -149,12 +176,17 @@ export const AuthProvider = ({ children }) => {
    * Limpa estados locais e dados persistidos
    */
   const logout = () => {
+    const currentUser = user?.name || 'Usuário desconhecido'
+    terminalLogger.auth(`Logout iniciado para: ${currentUser}`)
+    
     // Limpa estado global
     setUser(null)
     
     // Remove dados do localStorage
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    
+    terminalLogger.success('Logout realizado com sucesso')
     
     // TODO: Quando implementar backend, descomentar linha abaixo
     // authService.logout()

@@ -17,12 +17,25 @@ import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { CircularProgress, Box } from '@mui/material'
+import { terminalLogger } from '../services/terminalLogger'
 
 export const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, loading, isAuthenticated } = useAuth()
 
+  // Log da tentativa de acesso
+  React.useEffect(() => {
+    if (!loading) {
+      terminalLogger.route(`Verificando acesso à rota protegida (role: ${requiredRole})`, {
+        isAuthenticated,
+        userRole: user?.role || 'não autenticado',
+        requiredRole
+      })
+    }
+  }, [loading, isAuthenticated, user, requiredRole])
+
   // Exibe loading enquanto verifica autenticação
   if (loading) {
+    terminalLogger.debug('Verificando autenticação...')
     return (
       <Box
         display="flex"
@@ -37,6 +50,7 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
 
   // Redireciona para login se não estiver autenticado
   if (!isAuthenticated) {
+    terminalLogger.warn('Acesso negado - usuário não autenticado, redirecionando para login')
     return <Navigate to="/login" replace />
   }
 
@@ -49,10 +63,18 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
       client: '/client',
     }
     
+    const redirectTo = redirectMap[user.role] || '/login'
+    terminalLogger.warn(`Acesso negado - role incorreto (tem: ${user.role}, precisa: ${requiredRole})`, {
+      currentRole: user.role,
+      requiredRole,
+      redirectTo
+    })
+    
     // Redireciona para o dashboard apropriado ou login se role inválido
-    return <Navigate to={redirectMap[user.role] || '/login'} replace />
+    return <Navigate to={redirectTo} replace />
   }
 
   // Renderiza o componente filho se todas as validações passaram
+  terminalLogger.success(`Acesso autorizado - ${user.name} (${user.role})`)
   return children
 }

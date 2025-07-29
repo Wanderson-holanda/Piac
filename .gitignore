@@ -106,3 +106,16 @@ cypress/screenshots/
 cypress/videos/
 test-results/
 playwright-report/
+
+# Documentação temporária e arquivos de desenvolvimento
+ARQUITETURA_COMPLETA.md
+BOAS_PRATICAS.md
+DEBUG_TELA_BRANCA.md
+DEVELOPER.md
+TERMINAL_LOGS.md
+README_NEW.md
+README_OLD.md
+
+# Logs de desenvolvimento
+logs/
+*.log

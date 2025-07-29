@@ -73,46 +73,128 @@ const DashboardLayout = ({ children, menuItems, title }) => {
   }
 
   const drawer = (
-    <Box>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box
         sx={{
-          p: 2,
+          p: 3,
           background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
           color: 'white',
           textAlign: 'center',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
         }}
       >
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          PIAC Engenharia
+        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+          PIAC
         </Typography>
-        <Typography variant="body2" sx={{ opacity: 0.8 }}>
-          {title}
+        <Typography variant="caption" sx={{ opacity: 0.9, textTransform: 'uppercase', letterSpacing: 1 }}>
+          Engenharia
         </Typography>
+        <Box
+          sx={{
+            mt: 2,
+            pt: 2,
+            borderTop: '1px solid rgba(255,255,255,0.2)',
+          }}
+        >
+          <Typography variant="body2" sx={{ opacity: 0.8, fontWeight: 500 }}>
+            {title}
+          </Typography>
+          <Typography variant="caption" sx={{ opacity: 0.7 }}>
+            Olá, {user?.name?.split(' ')[0]}
+          </Typography>
+        </Box>
       </Box>
-      <Divider />
-      <List>
-        {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton
-              onClick={() => item.onClick && item.onClick()}
-              selected={item.selected}
-              sx={{
-                '&.Mui-selected': {
-                  backgroundColor: theme.palette.primary.light + '20',
+      <Box sx={{ flex: 1, py: 1 }}>
+        <List sx={{ px: 1 }}>
+          {menuItems.map((item, index) => (
+            <ListItem key={item.text} disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                onClick={() => item.onClick && item.onClick()}
+                selected={item.selected}
+                sx={{
+                  borderRadius: 2,
+                  mx: 1,
+                  transition: 'all 0.2s ease-in-out',
                   '&:hover': {
-                    backgroundColor: theme.palette.primary.light + '30',
+                    backgroundColor: theme.palette.primary.light + '15',
+                    transform: 'translateX(4px)',
                   },
-                },
+                  '&.Mui-selected': {
+                    backgroundColor: theme.palette.primary.main + '20',
+                    borderLeft: `4px solid ${theme.palette.primary.main}`,
+                    '&:hover': {
+                      backgroundColor: theme.palette.primary.main + '30',
+                    },
+                  },
+                }}
+              >
+                <ListItemIcon 
+                  sx={{ 
+                    color: item.selected ? theme.palette.primary.main : theme.palette.text.secondary,
+                    minWidth: 40,
+                    transition: 'color 0.2s ease-in-out',
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText 
+                  primary={item.text}
+                  primaryTypographyProps={{
+                    fontWeight: item.selected ? 600 : 400,
+                    fontSize: '0.9rem',
+                  }}
+                />
+                {item.badge && (
+                  <Box
+                    sx={{
+                      bgcolor: theme.palette.error.main,
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: 20,
+                      height: 20,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {item.badge}
+                  </Box>
+                )}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box sx={{ mt: 'auto', p: 2 }}>
+        <Divider sx={{ mb: 2, opacity: 0.3 }} />
+        <ListItem disablePadding>
+          <ListItemButton 
+            onClick={handleLogout}
+            sx={{ 
+              borderRadius: 2,
+              color: theme.palette.error.main,
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: theme.palette.error.main + '10',
+                transform: 'translateX(4px)',
+              }
+            }}
+          >
+            <ListItemIcon sx={{ color: theme.palette.error.main, minWidth: 40 }}>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Sair"
+              primaryTypographyProps={{
+                fontSize: '0.9rem',
+                fontWeight: 500,
               }}
-            >
-              <ListItemIcon sx={{ color: item.selected ? theme.palette.primary.main : 'inherit' }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+            />
+          </ListItemButton>
+        </ListItem>
+      </Box>
     </Box>
   )
 
@@ -120,31 +202,55 @@ const DashboardLayout = ({ children, menuItems, title }) => {
     <Box sx={{ display: 'flex' }}>
       <AppBar
         position="fixed"
+        elevation={0}
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
           ml: { md: `${drawerWidth}px` },
-          backgroundColor: 'white',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
           color: 'text.primary',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ minHeight: '70px !important' }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { md: 'none' } }}
+            sx={{ 
+              mr: 2, 
+              display: { md: 'none' },
+              '&:hover': {
+                backgroundColor: theme.palette.primary.main + '10',
+              }
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              {user?.name}
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h5" noWrap component="div" sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+              {title}
             </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {new Date().toLocaleDateString('pt-BR', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
+                {user?.name}
+              </Typography>
+              <Typography variant="caption" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+                {user?.role === 'partner' ? 'Parceiro' : user?.role === 'client' ? 'Cliente' : 'Administrador'}
+              </Typography>
+            </Box>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -152,8 +258,23 @@ const DashboardLayout = ({ children, menuItems, title }) => {
               aria-haspopup="true"
               onClick={handleMenu}
               color="inherit"
+              sx={{
+                transition: 'transform 0.2s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                }
+              }}
             >
-              <Avatar sx={{ width: 32, height: 32, bgcolor: theme.palette.primary.main }}>
+              <Avatar 
+                sx={{ 
+                  width: 40, 
+                  height: 40, 
+                  bgcolor: theme.palette.primary.main,
+                  fontSize: '1.1rem',
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                }}
+              >
                 {user?.name?.charAt(0).toUpperCase()}
               </Avatar>
             </IconButton>
@@ -171,25 +292,43 @@ const DashboardLayout = ({ children, menuItems, title }) => {
               }}
               open={Boolean(anchorEl)}
               onClose={handleClose}
+              PaperProps={{
+                sx: {
+                  mt: 1,
+                  borderRadius: 2,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  minWidth: 200,
+                }
+              }}
             >
-              <MenuItem onClick={handleClose}>
+              <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                  {user?.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+              <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
                 <ListItemIcon>
                   <AccountCircle fontSize="small" />
                 </ListItemIcon>
-                Perfil
+                <Typography variant="body2">Meu Perfil</Typography>
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={handleClose} sx={{ py: 1.5 }}>
                 <ListItemIcon>
                   <Settings fontSize="small" />
                 </ListItemIcon>
-                Configurações
+                <Typography variant="body2">Configurações</Typography>
               </MenuItem>
-              <Divider />
-              <MenuItem onClick={handleLogout}>
+              <Divider sx={{ my: 1 }} />
+              <MenuItem onClick={handleLogout} sx={{ py: 1.5, color: theme.palette.error.main }}>
                 <ListItemIcon>
-                  <Logout fontSize="small" />
+                  <Logout fontSize="small" sx={{ color: theme.palette.error.main }} />
                 </ListItemIcon>
-                Sair
+                <Typography variant="body2">Sair da Conta</Typography>
               </MenuItem>
             </Menu>
           </Box>
@@ -209,7 +348,11 @@ const DashboardLayout = ({ children, menuItems, title }) => {
           }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth,
+              backgroundImage: 'none',
+            },
           }}
         >
           {drawer}
@@ -218,7 +361,13 @@ const DashboardLayout = ({ children, menuItems, title }) => {
           variant="permanent"
           sx={{
             display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-paper': { 
+              boxSizing: 'border-box', 
+              width: drawerWidth,
+              backgroundImage: 'none',
+              borderRight: '1px solid',
+              borderColor: 'divider',
+            },
           }}
           open
         >
@@ -231,9 +380,9 @@ const DashboardLayout = ({ children, menuItems, title }) => {
           flexGrow: 1,
           p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
-          mt: 8,
-          backgroundColor: theme.palette.background.default,
-          minHeight: 'calc(100vh - 64px)',
+          mt: '70px',
+          backgroundColor: theme.palette.grey[50],
+          minHeight: 'calc(100vh - 70px)',
         }}
       >
         {children}
