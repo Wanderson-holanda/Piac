@@ -116,6 +116,15 @@ TERMINAL_LOGS.md
 README_NEW.md
 README_OLD.md
 
+# Arquivos de teste e desenvolvimento
+src/components/BasicTest.jsx
+src/components/LogMonitor.jsx
+src/components/SimpleLogTest.jsx
+src/components/TerminalLoggerTest.jsx
+src/components/TestPage.jsx
+src/services/logger.js
+src/services/simpleLogger.js
+
 # Logs de desenvolvimento
 logs/
 *.log
