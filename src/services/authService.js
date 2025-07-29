@@ -1,8 +1,33 @@
+/**
+ * authService - Serviço de autenticação e comunicação com API
+ * 
+ * Funcionalidades:
+ * - Configuração do cliente HTTP (Axios)
+ * - Interceptors para autenticação automática
+ * - Funções de login, registro e validação
+ * - Tratamento centralizado de erros HTTP
+ * - Base para integração com backend
+ * 
+ * Configuração:
+ * - URL da API configurável via variável de ambiente
+ * - Headers padrão para JSON
+ * - Token JWT automático nas requisições
+ * - Redirecionamento para login em caso de erro 401
+ * 
+ * TODO: Implementar todas as funções quando backend estiver pronto
+ */
+
 import axios from 'axios'
 
+// URL base da API - configurável via environment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api'
 
-// Configuração do axios
+/**
+ * Configuração da instância do Axios
+ * - BaseURL para todas as requisições
+ * - Headers padrão para JSON
+ * - Timeout configurável se necessário
+ */
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -10,7 +35,12 @@ const api = axios.create({
   },
 })
 
-// Interceptor para adicionar token nas requisições
+/**
+ * Interceptor de requisição
+ * - Adiciona automaticamente o token JWT em todas as requisições
+ * - Busca o token do localStorage
+ * - Configura header Authorization
+ */
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token')
@@ -24,7 +54,12 @@ api.interceptors.request.use(
   }
 )
 
-// Interceptor para lidar com respostas de erro
+/**
+ * Interceptor de resposta
+ * - Trata erros HTTP de forma centralizada
+ * - Remove token e redireciona para login em caso de 401
+ * - Exibe mensagens de erro apropriadas
+ */
 api.interceptors.response.use(
   (response) => response,
   (error) => {

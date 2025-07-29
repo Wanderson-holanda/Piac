@@ -1,3 +1,22 @@
+/**
+ * PartnerOverview - Visão geral do dashboard do parceiro
+ * 
+ * Funcionalidades:
+ * - Exibe estatísticas principais (indicações, comissões, clientes)
+ * - Gráficos de performance mensal
+ * - Lista de atividades recentes
+ * - Indicadores de status e metas
+ * - Cards com KPIs importantes
+ * 
+ * Dados exibidos:
+ * - Total de indicações realizadas
+ * - Comissões recebidas no mês
+ * - Clientes indicados
+ * - Taxa de conversão
+ * - Gráfico de evolução mensal
+ * - Últimas atividades
+ */
+
 import React, { useState, useEffect } from 'react'
 import {
   Grid,
@@ -27,6 +46,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { partnerService } from '../../services/authService'
 
 const PartnerOverview = () => {
+  // Estado para armazenar dados do dashboard
   const [dashboardData, setDashboardData] = useState({
     stats: {
       totalIndicacoes: 0,

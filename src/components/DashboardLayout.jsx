@@ -1,3 +1,19 @@
+/**
+ * DashboardLayout - Layout padrão para dashboards
+ * 
+ * Funcionalidades:
+ * - Sidebar com menu de navegação
+ * - AppBar com informações do usuário
+ * - Menu de perfil com opções de logout
+ * - Design responsivo para mobile e desktop
+ * - Drawer colapsável em telas menores
+ * 
+ * @param {Object} props - Props do componente
+ * @param {Array} props.menuItems - Itens do menu lateral
+ * @param {string} props.title - Título exibido na AppBar
+ * @param {ReactNode} props.children - Conteúdo principal do dashboard
+ */
+
 import React, { useState } from 'react'
 import {
   Box,
@@ -27,6 +43,7 @@ import {
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
+// Largura padrão da sidebar
 const drawerWidth = 280
 
 const DashboardLayout = ({ children, menuItems, title }) => {

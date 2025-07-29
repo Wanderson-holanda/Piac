@@ -1,3 +1,20 @@
+/**
+ * Login - Página de autenticação
+ * 
+ * Funcionalidades:
+ * - Formulário de login com validação
+ * - Integração com contexto de autenticação
+ * - Redirecionamento baseado no role do usuário
+ * - Validação com Yup e React Hook Form
+ * - Toggle para mostrar/ocultar senha
+ * - Links para registro e recuperação de senha
+ * 
+ * Usuários de teste:
+ * - cliente@teste.com / 123456 (Cliente)
+ * - parceiro@teste.com / 123456 (Parceiro)
+ * - admin@teste.com / 123456 (Admin)
+ */
+
 import React, { useState } from 'react'
 import {
   Container,
@@ -19,14 +36,23 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
+// Schema de validação do formulário usando Yup
 const schema = yup.object({
-  email: yup.string().email('Email inválido').required('Email é obrigatório'),
-  password: yup.string().min(6, 'Senha deve ter pelo menos 6 caracteres').required('Senha é obrigatória'),
+  email: yup
+    .string()
+    .email('Email inválido')
+    .required('Email é obrigatório'),
+  password: yup
+    .string()
+    .min(6, 'Senha deve ter pelo menos 6 caracteres')
+    .required('Senha é obrigatória'),
 })
 
 const Login = () => {
   const navigate = useNavigate()
   const { login } = useAuth()
+  
+  // Estado para controlar visibilidade da senha
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
