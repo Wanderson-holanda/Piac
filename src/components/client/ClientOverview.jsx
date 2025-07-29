@@ -1,3 +1,22 @@
+/**
+ * ClientOverview - Visão geral do dashboard do cliente
+ * 
+ * Funcionalidades:
+ * - Resumo dos contratos ativos do cliente
+ * - Status dos projetos em andamento
+ * - Documentos recentes e downloads
+ * - Histórico de interações
+ * - Informações de contato e suporte
+ * - Notificações importantes
+ * 
+ * Dados exibidos:
+ * - Contratos ativos e seu progresso
+ * - Próximos vencimentos e milestones
+ * - Documentos disponíveis para download
+ * - Últimas atualizações dos projetos
+ * - Informações de contato do responsável
+ */
+
 import React, { useState, useEffect } from 'react'
 import {
   Box,

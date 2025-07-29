@@ -1,3 +1,21 @@
+/**
+ * Landing - Página inicial do sistema PIAC
+ * 
+ * Funcionalidades:
+ * - Apresentação da empresa e sistema
+ * - Seções sobre funcionalidades principais
+ * - Call-to-actions para login e registro
+ * - Design responsivo e profissional
+ * - Informações de contato e suporte
+ * 
+ * Seções:
+ * - Hero section com título e descrição
+ * - Grid com principais funcionalidades
+ * - Cards explicativos para cada perfil de usuário
+ * - Footer com informações da empresa
+ * - AppBar com navegação para login/registro
+ */
+
 import React from 'react'
 import {
   Container,
